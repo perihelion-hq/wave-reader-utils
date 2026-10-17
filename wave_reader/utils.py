@@ -44,7 +44,11 @@ def battery_percentage(voltage: float, battery_count: int = 2) -> int:
     :param voltage: The battery voltage in volts.
     :param battery_count: The number of batteries (2 or 3).
     :return: The estimated battery percentage.
+    :raises ValueError: if battery_count is not 2 or 3.
     """
+
+    if battery_count not in (2, 3):
+        raise ValueError(f"unsupported battery count: {battery_count}")
 
     if battery_count == 3:
         # Wave Mini: 3 batteries (2.4V - 4.5V)

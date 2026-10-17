@@ -371,6 +371,11 @@ class TestRequiresClient(IsolatedAsyncioTestCase):
 class TestBatteryCalculation(TestCase):
     """Unit tests for battery percentage calculation."""
 
+    def test_unsupported_battery_count(self):
+        for count in (0, 1, 4):
+            with self.assertRaises(ValueError):
+                battery_percentage(3.0, count)
+
     def test_two_battery_full(self):
         self.assertEqual(battery_percentage(3.0, 2), 100)
         self.assertEqual(battery_percentage(3.2, 2), 100)
