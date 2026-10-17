@@ -1,3 +1,6 @@
+import math
+
+
 class Threshold:
     GREEN = "Good"
     YELLOW = "Fair"
@@ -162,6 +165,25 @@ class Humidity(float):
         else:
             _threshold = Threshold.GREEN
         return _threshold
+
+    def dew_point(self, temperature: float) -> "Temperature":
+        """Dew point for this relative humidity at the given air temperature (°C).
+
+        Uses the Magnus approximation with b = 17.62 and c = 243.12 °C, rounded
+        to one decimal place.
+
+        :raises ValueError: if the relative humidity is not in (0, 100].
+        """
+
+        if self.relative_humidity <= 0 or self.relative_humidity > 100:
+            raise ValueError(
+                f"relative humidity out of range: {self.relative_humidity}"
+            )
+        b, c = 17.62, 243.12
+        gamma = math.log(self.relative_humidity / 100) + b * temperature / (
+            c + temperature
+        )
+        return Temperature(round(c * gamma / (b - gamma), 1))
 
 
 class Battery(float):

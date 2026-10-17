@@ -132,3 +132,17 @@ class TestHumidity(TestCase):
         self.assertEqual(fair, measure.Threshold.YELLOW)
         self.assertEqual(good, measure.Threshold.GREEN)
         self.assertEqual(error, measure.Threshold.WHITE)
+
+
+class TestDewPoint(TestCase):
+    def test_dew_point(self):
+        self.assertEqual(measure.Humidity(50.0).dew_point(20.0), 9.3)
+        self.assertEqual(measure.Humidity(100.0).dew_point(15.0), 15.0)
+        self.assertIsInstance(
+            measure.Humidity(80.0).dew_point(-5.0), measure.Temperature
+        )
+
+    def test_dew_point_out_of_range(self):
+        for rh in (0.0, -1.0, 100.5):
+            with self.assertRaises(ValueError):
+                measure.Humidity(rh).dew_point(20.0)
